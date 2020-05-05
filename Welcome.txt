@@ -13,5 +13,12 @@ The team is ready. Build something amazing!
 #bedezub
 #azim
 #jgnmakandadah
+<<<<<<< HEAD
 
 #zub sangat hensem
+=======
+<<<<<<< HEAD
+#xhamster
+=======
+>>>>>>> 7a27e19b78beba7c7fd58cc6ffa7458f9638d09c
+>>>>>>> 64351e6242f93ef53dc657b197e80ade8f666cfb
