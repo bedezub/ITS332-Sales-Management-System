@@ -9,11 +9,11 @@
 * The above copyright notice and this permission notice shall be included in 
 * all copies or substantial portions of the Software.
 -->
-<?php include '../../config/conn.php'; ?>
+<?php include '../../config/init.php'; ?>
 
 <!DOCTYPE html>
 <html>
-    <?php include '../../view/head.html'; ?>
+    <?php include '../../view/head.php'; ?>
     <body>
         <?php
             $conn = openCon();
@@ -113,7 +113,7 @@
 
         <!-- Main content -->
         <div class="main-content" id="panel">
-            <?php include '../../view/header.html'; ?>
+            <?php include '../../view/header.php'; ?>
             <div class="header bg-primary pb-6">
                 <div class="container-fluid">
                     <div class="header-body">
@@ -162,6 +162,7 @@
                                         <tr>
                                             <th scope="col" class="sort" data-sort="name">Customer ID</th>
                                             <th scope="col" class="sort" data-sort="name">Customer Name</th>
+                                            <th scope="col" class="sort" data-sort="name">Membership</th>
                                             <th scope="col" class="sort" data-sort="name">Customer Phone</th>
                                             <th scope="col" class="sort" data-sort="name">Customer Address</th>
                                             <th scope="col" class="sort" data-sort="name">Action</th>
@@ -184,6 +185,13 @@
                                                 </div>
                                             </div>
                                             </th>
+                                            <td scope="row">
+                                            <div class="media align-items-center">
+                                                <div class="media-body">
+                                                <span class="name mb-0 text-sm"><?php if(substr($row["custid"], 0, 1) == 2) echo "Non-member"; else echo "Member"?></span>
+                                                </div>
+                                            </div>
+                                            </td>
                                             <td scope="row">
                                             <div class="media align-items-center">
                                                 <div class="media-body">
@@ -224,12 +232,10 @@
                                             if(isset($_GET["search"]) == true) {
 
                                                 $sql2="SELECT count(*) FROM CUSTOMER WHERE 
-                                                (prodid like '%$searching%'
-                                                or prodname like '%$searching%'
-                                                or prodcost like '%$searching%'
-                                                or prodprice like'%$searching%'
-                                                or prodtype like '%$searching%'
-                                                or prodquantity like '%$searching%')";
+                                                (custid like '%$searching%'
+                                                or custname like '%$searching%'
+                                                or custphone like '%$searching%'
+                                                or custadd like'%$searching%')";
 
                                             } else {
                                                 $sql2 = "SELECT count(*) FROM CUSTOMER";

@@ -10,12 +10,12 @@
 * The above copyright notice and this permission notice shall 
 * be included in all copies or substantial portions of the Software.
 -->
-<?php include '../../config/conn.php'; ?>
+<?php include '../../config/init.php'; ?>
 
 <!DOCTYPE html>
 <html>
 
-<?php include '../../view/head.html'; ?>
+<?php include '../../view/head.php'; ?>
 
 <body class="bg-default">
 
@@ -26,8 +26,51 @@
       $cust = null;
       $psales = null;
 
-      if(isset($_GET["calledit"])) {
-        echo '<script>console.log('. json_encode("Masuk 4") .')</script>';
+      if(isset($_POST["update"])) {
+
+        echo '<script>console.log('. json_encode("Masuk 5") .')</script>';
+
+        $custid = $_POST["custid"];
+        $salesid = $_POST["salesid"];
+        $prodid = $_POST["prodid"];
+        $psalesid = $_POST["psalesid"];
+        echo '<script>console.log('. json_encode($psalesid) .')</script>';
+
+        $checkPsales="SELECT * FROM product_sales WHERE psalesid=$psalesid";
+        $result = $conn->query($checkPsales);
+        if($result->num_rows > 0) {
+          $psales = $result->fetch_assoc();
+        }   
+        
+        $checkCust = "SELECT * FROM CUSTOMER WHERE custname LIKE '%$custid%' or custid like '%$custid%'";
+        $result = $conn->query($checkCust);
+        if($result->num_rows>0) { 
+          $cust = $result->fetch_assoc();
+        } 
+
+        $checkProd = "SELECT * FROM PRODUCT WHERE prodid LIKE '%$prodid%' OR prodname LIKE '%$prodid%'";
+        $result = $conn->query($checkProd);
+        if($result->num_rows>0) { 
+          $prod = $result->fetch_assoc();
+        } 
+        
+
+        $checkSales="SELECT * FROM SALES WHERE salesid=$salesid";
+        $result = $conn->query($checkSales);
+        if($result->num_rows>0) { 
+          $sales = $result->fetch_assoc();
+        }   
+
+        $psalesquantity = $_POST["psalesquantity"];
+
+        $update = "UPDATE product_sales SET
+        psalesquantity = $psalesquantity
+        WHERE psalesid = $psalesid";
+
+        $result=$conn->query($update);
+
+      } else if(isset($_GET["calledit"])) {
+
         $custid = $_GET["custid"];
         $salesid = $_GET["salesid"];
         $prodid = $_GET["prodid"];
@@ -49,21 +92,18 @@
         $result = $conn->query($checkProd);
         if($result->num_rows>0) { 
           $prod = $result->fetch_assoc();
-          if (!$result) {
-            trigger_error('Invalid query: ' . $conn->error);
-          }
         } 
-        echo '<script>console.log('. json_encode($prod) .')</script>';
+
         $checkSales="SELECT * FROM SALES WHERE salesid=$salesid";
         $result = $conn->query($checkSales);
         if($result->num_rows>0) { 
           $sales = $result->fetch_assoc();
         }    
 
-        if(isset($_GET['calledit'])){unset($_GET['calledit']);} 
+        // if(isset($_GET['calledit'])){unset($_GET['calledit']);} 
 
       } else if(isset($_GET["calldelete"])) {
-        echo '<script>console.log('. json_encode("Masuk 3") .')</script>';
+        
         $custid = $_GET["custid"];
         $salesid = $_GET["salesid"];
         $prodid = $_GET["prodid"];
@@ -89,14 +129,16 @@
         if($result->num_rows>0) { 
           $prod = $result->fetch_assoc();
         } 
+        if(isset($_GET["calldelete"])) {
+          $checkSales="SELECT * FROM SALES WHERE salesid=$salesid";
+          $result = $conn->query($checkSales);
+          if($result->num_rows>0) { 
+            $sales = $result->fetch_assoc();
+          }    
 
-        $checkSales="SELECT * FROM SALES WHERE salesid=$salesid";
-        $result = $conn->query($checkSales);
-        if($result->num_rows>0) { 
-          $sales = $result->fetch_assoc();
-        }    
+          if(isset($_GET['calldelete'])){unset($_GET['calldelete']);} 
+        }
 
-        if(isset($_GET['calldelete'])){unset($_GET['calldelete']);} 
 
       } else if(isset($_POST["custid"]) && isset($_POST["prodid"])) {
         echo '<script>console.log('. json_encode("Masuk 2") .')</script>';
@@ -124,6 +166,14 @@
         } 
 
         $psalesid = $prod["prodid"] + $salesid;
+
+        $update = "UPDATE sales SET
+        psalesid = '$psalesid'
+        WHERE salesid = $salesid";
+
+        $result=$conn->query($update);
+        echo '<script>console.log('. json_encode("Sales id updated") .')</script>';
+
         $createPSales = "INSERT INTO product_sales (psalesid, salesid, psalesquantity) 
         VALUES ($psalesid, '$salesid', $psalesquantity);";
 
@@ -131,13 +181,14 @@
         {
             $sql="SELECT * FROM product_sales WHERE psalesid=$psalesid";
             $result = $conn->query($sql);
+
             if($result->num_rows > 0) {
               $psales = $result->fetch_assoc();
             }
         }
         
       } else if(isset($_POST["custid"])) {
-        
+        echo '<script>console.log('. json_encode("Masuk create sales") .')</script>';
         $custid = $_POST["custid"];
         $sql = "SELECT * FROM CUSTOMER WHERE custid=$custid";
         $result = $conn->query($sql);
@@ -145,7 +196,7 @@
           $cust = $result->fetch_assoc();
 
           $salesid = date("yy").rand(100000,999999);
-          $staffid = 2020198436;
+          $staffid = $login_id;
           $date=date("Y-m-d");
           $createSales = "INSERT INTO SALES (salesid, custid, staffid, psalesid, salesquantity, salesdate, salesprofit) 
           VALUES ($salesid, $custid, $staffid, 0, 0, '$date', 1);";
@@ -157,15 +208,15 @@
               $sales = $result->fetch_assoc();
           }
       } else {
-        echo '<script>console.log('. json_encode("Masuk sini") .')</script>';
+        if(isset($_POST['custid'])){unset($_POST['custid']);} 
       }
     }
     ?>
   <!-- Navbar -->
-  <?php // include '../../view/navigation.php'; ?>
+  <?php include '../../view/navigation.php'; ?>
   <!-- Main content -->
   <div class="main-content">
-    <?php // include '../../view/header.html'; ?>
+    <?php include '../../view/header.php'; ?>
     <!-- Header -->
     <div class="header bg-gradient-primary py-7 py-lg-8 pt-lg-9">
       <div class="container">
@@ -183,22 +234,24 @@
         <div class="col-lg-6 col-md-8">
           <div class="card bg-secondary border-0">
             <div class="card-body px-lg-5 py-lg-5">
-              <?php if(isset($_GET["calledit"]) == true) {?>
+              <?php if(isset($_GET["calledit"])) {?>
                 <div class="text-center text-muted mb-4">
                     <small>Update Sales</small>
                 </div>
               <!-- Update -->
-                <form role="form" action="registerhome.php" method="POST">
+                <form role="form" name="update" action="registerhome.php" method="POST">
                   <div class="form-group">
                     <div class="input-group input-group-merge input-group-alternative mb-3">
-                      <input class="form-control" placeholder="Customer ID" value="<?php echo $cust["custname"] ?? ""; ?>" name="custid" type="text" autocomplete="off" required>
+                      <input class="form-control" placeholder="Customer ID" value="<?php echo $cust["custname"] ?? ""; ?>" name="custid" type="text" autocomplete="off" readonly>
                       <input type="hidden" id="sales" name="salesid" value="<?php echo $sales["salesid"] ?? ""; ?>">
+                      <input type="hidden" id="psales" name="psalesid" value="<?php echo $psales["psalesid"] ?? ""; ?>">
+                      <input type="hidden" id="update" name="update" value="<?php echo ""; ?>">
                     </div>
                   </div>
-                  <?php if(isset($_GET["custid"]) == true) {?>
+                  <?php if(isset($_GET["prodid"]) == true) {?>
                     <div class="form-group">
                       <div class="input-group input-group-merge input-group-alternative mb-3">
-                        <input class="form-control" placeholder="Product ID" name="prodid" value="<?php echo $prod["prodname"]; ?>"type="text" autocomplete="off" required>
+                        <input class="form-control" placeholder="Product ID" name="prodid" value="<?php echo $prod["prodname"]; ?>"type="text" autocomplete="off" readonly>
                       </div>
                     </div>
                     <div class="form-group">
@@ -209,11 +262,13 @@
                   <?php } ?>
                   <div class="text-center">
                     <button type="submit" class="btn btn-success mt-4">
-                      Add Product
+                      Update Product
                     </button>
                   </div>
                 </form>
-                <?php } else { ?>
+
+                  <?php } else {?>
+                  
                   <div class="text-center text-muted mb-4">
                       <small>Enter New Sales</small>
                   </div>
@@ -221,7 +276,7 @@
                 <form role="form" action="registerhome.php" method="POST">
                   <div class="form-group">
                     <div class="input-group input-group-merge input-group-alternative mb-3">
-                      <input class="form-control" placeholder="Customer ID" value="<?php echo $cust["custname"] ?? ""; ?>" name="custid" type="text" autocomplete="off" required>
+                      <input class="form-control" placeholder="Customer ID" value="<?php echo $cust["custname"] ?? ""; ?>" name="custid" type="text" autocomplete="off" <?php if(isset($_POST["custid"]) || isset($_GET["custid"])){ echo "readonly"; } else { echo "required";} ?>>
                       <input type="hidden" id="sales" name="salesid" value="<?php echo $sales["salesid"] ?? ""; ?>">
                     </div>
                   </div>
@@ -237,26 +292,37 @@
                       </div>
                     </div>
                   <?php } ?>
+                  <?php if(isset($_POST["custid"]) || isset($_GET["custid"])) {?>
                   <div class="text-center">
                     <button type="submit" class="btn btn-success mt-4">
                       Add Product
                     </button>
                   </div>
+                  <?php } else {?>
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-success mt-4">
+                        Add Customer ID
+                      </button>
+                    </div>
+                    <?php }?>
                 </form>
                 <?php } ?>
             </div>
           </div>
+
+          <!-- Table Checkout -->
           <?php 
             if(isset($_POST["prodid"]) || isset($_GET["prodid"])) { 
 
             $getProductList = "SELECT *, product_sales.psalesid FROM product_sales, sales, product, customer 
             WHERE sales.salesid = $salesid 
             AND product_sales.salesid = sales.salesid 
-            AND (product_sales.psalesid-product_sales.salesid) - product.prodid
+            AND (product_sales.psalesid-product_sales.salesid) = product.prodid
             AND customer.custid = sales.custid";
             $result = $conn->query($getProductList);
             if($result->num_rows>0) {
               while($row = $result->fetch_assoc()) {
+                echo '<script>console.log('. json_encode($row) .')</script>';
                 $val[] = $row;
               }
             } else {
@@ -265,6 +331,15 @@
             if(sizeof($val) != 0) {
           ?>  
           <div class="card bg-default shadow">
+            <div class="card-header bg-transparent border-0" style="display: inline-block;">
+              <div class="text-right">
+                <a href="checkout.php?salesid=<?=$salesid?>">
+                  <button type="submit" class="btn btn-neutral">
+                    Checkout
+                  </button>
+                </a>
+              </div>
+            </div>
             <div class="table-responsive">
               <table class="table align-items-center table-dark table-flush">
                 <thead class="thead-dark">
@@ -300,7 +375,7 @@
                           <a class="dropdown-item" href="registerhome.php?calledit=<?php echo "edit";?>&custid=<?=$row["custid"]?>&prodid=<?=$row["prodid"]?>&salesid=<?=$row["salesid"]?>&psalesid=<?=$row["psalesid"]?>">
                             Edit Product
                           </a>
-                          <a class="dropdown-item" href="registerhome.php?calldelete=<?="delete";?>&custid=<?=$row["custid"]?>&prodid=<?=$row["prodid"]?>&salesid=<?=$row["salesid"]?>&psalesid=<?=$row["psalesid"]?>">
+                          <a class="dropdown-item" href="registerhome.php?calldelete=<?php echo "delete";?>&custid=<?=$row["custid"]?>&prodid=<?=$row["prodid"]?>&salesid=<?=$row["salesid"]?>&psalesid=<?=$row["psalesid"]?>">
                             Delete Product
                           </a>
                           </div>

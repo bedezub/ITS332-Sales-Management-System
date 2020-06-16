@@ -1,11 +1,8 @@
 <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
     <div class="scrollbar-inner">
-    <!-- Brand -->
-    <div class="sidenav-header  align-items-center">
-        <a class="navbar-brand" href="javascript:void(0)">
-        <img src="../../assets/img/brand/blue.png" class="navbar-brand-img" alt="...">
-        </a>
-    </div>
+        <div class="text-center">
+            <img src="../../assets/img/brand/logo.png" style="height:150px; padding-top:25px" alt="...">
+        </div>
     <div class="navbar-inner">
         <!-- Collapse -->
         <div class="collapse navbar-collapse" id="sidenav-collapse-main">
@@ -29,6 +26,7 @@
                 <i class="ni ni-single-02 text-yellow"></i>
                 <span class="nav-link-text">Customer</span>
             </a>
+            <?php if($login_role == "Manager") {?>
             </li>
             <li class="nav-item">
             <a class="nav-link <?php if($_SERVER['SCRIPT_NAME']=="/vmog/views/staff/staff.php") echo "active"; ?>" href="../../views/staff/staff.php">
@@ -42,6 +40,7 @@
                 <span class="nav-link-text">Sales</span>
             </a>
             </li>
+            <?php } ?>
         </ul>
         <!-- Divider -->
         <hr class="my-3">

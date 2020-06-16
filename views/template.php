@@ -56,3 +56,10 @@ FROM product_sales WHERE product_sales.salesid = 2020320581)
 
 SELECT (product_sales.psalesid-product_sales.salesid) 
 FROM product_sales WHERE product_sales.salesid = 2020320581
+
+SELECT product.prodname, product_sales.psalesquantity FROM product_sales 
+JOIN product ON (product_sales.psalesid - product_sales.salesid) = product.prodid
+
+SELECT product.prodname, SUM(product_sales.psalesquantity) AS top_product FROM product_sales 
+JOIN product ON (product_sales.psalesid - product_sales.salesid) = product.prodid
+GROUP BY product.prodname

@@ -10,12 +10,12 @@
 * The above copyright notice and this permission notice shall 
 * be included in all copies or substantial portions of the Software.
 -->
-<?php include '../../config/conn.php'; ?>
+<?php include '../../config/init.php'; ?>
 
 <!DOCTYPE html>
 <html>
 
-<?php include '../../view/head.html'; ?>
+<?php include '../../view/head.php'; ?>
 
 <body class="bg-default">
   <?php 
@@ -41,7 +41,7 @@
   <?php include '../../view/navigation.php'; ?>
   <!-- Main content -->
   <div class="main-content">
-    <?php include '../../view/header.html'; ?>
+    <?php include '../../view/header.php'; ?>
     <!-- Header -->
     <div class="header bg-gradient-primary py-7 py-lg-8 pt-lg-9">
       <div class="container">

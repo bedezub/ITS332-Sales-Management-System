@@ -9,11 +9,11 @@
 * The above copyright notice and this permission notice shall be included in 
 * all copies or substantial portions of the Software.
 -->
-<?php include '../../config/conn.php'; ?>
+<?php include '../../config/init.php'; ?>
 
 <!DOCTYPE html>
 <html>
-    <?php include '../../view/head.html'; ?>
+    <?php include '../../view/head.php'; ?>
     <body>
         <?php
             $conn = openCon();
@@ -116,7 +116,7 @@
 
         <!-- Main content -->
         <div class="main-content" id="panel">
-            <?php include '../../view/header.html'; ?>
+            <?php include '../../view/header.php'; ?>
             <div class="header bg-primary pb-6">
                 <div class="container-fluid">
                     <div class="header-body">

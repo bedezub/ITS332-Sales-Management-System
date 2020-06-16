@@ -8,7 +8,7 @@ var SalesChart = (function() {
 
   // Variables
 
-  var $chart = $('#chart-sales-dark');
+  var $chart = $('#chart-sales');
 
 
   // Methods
@@ -28,7 +28,7 @@ var SalesChart = (function() {
             ticks: {
               callback: function(value) {
                 if (!(value % 10)) {
-                  return '$' + value + 'k';
+                  return 'RM' + value + 'k';
                 }
               }
             }
@@ -52,7 +52,7 @@ var SalesChart = (function() {
         }
       },
       data: {
-        labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        labels: ['Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         datasets: [{
           label: 'Performance',
           data: [0, 20, 10, 30, 15, 40, 20, 60, 60]
